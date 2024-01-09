@@ -7,7 +7,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # 只有package.josn 有变化时 才执行 pnpm install
 COPY package.json .
 
-RUN pnpm install
+RUN apk add --no-cache git && pnpm install
 
 COPY . .
 CMD pnpm dev
