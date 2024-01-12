@@ -17,7 +17,7 @@ jobs:
         run: docker build -t bamboo-sword:test -f Dockerfile.dev .
 
       - name: Run tests
-        run: docker run bamboo-sword:test
+        run: docker run bamboo-sword:test -- --coverage
 
   # deploy:
   #   needs: test
