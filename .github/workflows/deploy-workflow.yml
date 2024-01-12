@@ -1,0 +1,54 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t bamboo-sword:test -f Dockerfile.dev .
+
+      - name: Run tests
+        run: docker run bamboo-sword:test
+
+  # deploy:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v1
+
+  #     - name: Build, tag, and push image to Amazon ECR
+  #       id: build-image
+  #       uses: aws-actions/amazon-ecr-build-image@v1
+  #       with:
+  #         ecr-repository: bamboo-sword
+  #         image-tag: ${{ github.sha }}
+
+  #     - name: Fill in the new image ID in the Amazon ECS task definition
+  #       id: task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: task-definition.json
+  #         container-name: bamboo-sword
+  #         image: ${{ steps.build-image.outputs.image }}
+
+  #     - name: Deploy Amazon ECS task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
+  #         service: bamboo-sword
+  #         cluster: bamboo-sword-cluster
