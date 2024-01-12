@@ -22,7 +22,7 @@ jobs:
         run: docker build -t bamboo-sword:test -f Dockerfile.dev .
 
       - name: Run tests
-        run: docker run bamboo-sword:test -- --coverage
+        run: docker run bamboo-sword:test pnpm run test:watch -- --coverage
 
   # deploy:
   #   needs: test
