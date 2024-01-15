@@ -4,3 +4,19 @@ services:
 
 before_install:
   - docker build -t bamboo-sword -f Dockerfile.dev .
+
+script:
+  - docker run bamboo-sword pnpm test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-east-2'
+  app: 'bamboo-sword'
+  env: 'BambooSword-env'
+  bucket_name: 'elasticbeanstalk-us-east-2-1234567890'
+  bucket_path: 'bamboo-sword'
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: '$AWS_SECRET_KEY'

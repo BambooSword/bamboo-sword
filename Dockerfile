@@ -8,5 +8,5 @@ COPY . .
 RUN pnpm build
 
 FROM nginx
-
+EXPOSE 80
 COPY --from=builder /app/out /usr/share/nginx/html

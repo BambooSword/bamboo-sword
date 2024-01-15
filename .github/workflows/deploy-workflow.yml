@@ -24,36 +24,25 @@ jobs:
       - name: Run tests
         run: docker run bamboo-sword:test pnpm test -- --coverage
 
-  # deploy:
-  #   needs: test
-  #   runs-on: ubuntu-lateststeps:
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Login to Amazon ECR
-  #       id: login-ecr
-  #       uses: aws-actions/amazon-ecr-login@v1
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
 
-  #     - name: Build, tag, and push image to Amazon ECR
-  #       id: build-image
-  #       uses: aws-actions/amazon-ecr-build-image@v1
-  #       with:
-  #         ecr-repository: bamboo-sword
-  #         image-tag: ${{ github.sha }}
-
-  #     - name: Fill in the new image ID in the Amazon ECS task definition
-  #       id: task-def
-  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
-  #       with:
-  #         task-definition: task-definition.json
-  #         container-name: bamboo-sword
-  #         image: ${{ steps.build-image.outputs.image }}
-
-  #     - name: Deploy Amazon ECS task definition
-  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-  #       with:
-  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
-  #         service: bamboo-sword
-  #         cluster: bamboo-sword-cluster
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: bamboo-sword
+          environment_name: Bamboo-sword-env
+          existing_bucket_name: elasticbeanstalk-us-east-2-767397776477
+          version_label: ${{ github.sha }}
+          region: us-west-2
+          deployment_package: deploy.zip
