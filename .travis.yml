@@ -12,8 +12,8 @@ deploy:
   provider: elasticbeanstalk
   region: 'us-east-2'
   app: 'bamboo-sword'
-  env: 'BambooSword-env'
-  bucket_name: 'elasticbeanstalk-us-east-2-1234567890'
+  env: 'Bamboo-sword-env'
+  bucket_name: 'elasticbeanstalk-us-east-2-767397776477'
   bucket_path: 'bamboo-sword'
   on:
     branch: main
