@@ -37,9 +37,9 @@ jobs:
         with:
           node-version: '20'
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
       - name: Build
-        run: pnpm build
+        run: npm run build
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
 
