@@ -44,5 +44,5 @@ jobs:
           environment_name: Bamboo-sword-env
           existing_bucket_name: elasticbeanstalk-us-east-2-767397776477
           version_label: ${{ github.sha }}
-          region: us-west-2
+          region: us-east-2
           deployment_package: deploy.zip
